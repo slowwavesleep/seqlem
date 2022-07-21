@@ -12,6 +12,11 @@ from dataset import LemmaRulePreprocessor, LemmaRuleDataset
 
 EPOCHS = 1
 NAME = "tartuNLP/EstBERT"
+MAX_LENGTH = 224
+DEVICE = torch.device("cpu")
+BATCH_SIZE = 4
+LEARNING_RATE = 1e-5
+
 
 lp = LemmaRulePreprocessor()
 
@@ -24,13 +29,13 @@ model = AutoModelForTokenClassification.from_pretrained(NAME, num_labels=lp.rule
 lr_dataset = LemmaRuleDataset(
     dataset=dataset,
     tokenizer=tokenizer,
-    device=torch.device("cpu"),
-    max_length=224,
+    device=DEVICE,
+    max_length=MAX_LENGTH,
 )
 
-lr_loader = DataLoader(lr_dataset, batch_size=4)
+lr_loader = DataLoader(lr_dataset, batch_size=BATCH_SIZE)
 
-optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=1e-5)
+optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=LEARNING_RATE)
 
 
 def batch_accuracy(batch_predictions: torch.tensor, batch_labels: torch.tensor) -> float:
