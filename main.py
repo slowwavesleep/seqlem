@@ -33,21 +33,23 @@ lr_loader = DataLoader(lr_dataset, batch_size=4)
 optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=1e-5)
 
 
-def accuracy(predictions: torch.tensor, gold_labels: torch.tensor) -> float:
-    if not predictions.shape == gold_labels.shape:
+def batch_accuracy(batch_predictions: torch.tensor, batch_labels: torch.tensor) -> float:
+    if not batch_predictions.shape == batch_labels.shape:
         raise ValueError(
-            f"Shape mismatch between predictions and gold labels: {predictions.shape} vs. {gold_labels.shape}"
+            f"Shape mismatch between predictions and gold labels: {batch_predictions.shape} vs. {batch_labels.shape}"
         )
     true_predictions = [
-        [p for (p, l) in zip(pred, gold_label) if l != -100] for pred, gold_label in zip(predictions, gold_labels)
+        [p for (p, l) in zip(pred, gold_label) if l != -100]
+        for pred, gold_label in zip(batch_predictions, batch_labels)
     ]
     true_labels = [
-        [l for (p, l) in zip(pred, gold_label) if l != -100] for pred, gold_label in zip(predictions, gold_labels)
+        [l for (p, l) in zip(pred, gold_label) if l != -100]
+        for pred, gold_label in zip(batch_predictions, batch_labels)
     ]
 
     total = 0
     correct = 0
-    for pred, gold_labels in zip(true_predictions, true_labels):
+    for preds, gold_labels in zip(true_predictions, true_labels):
         for pred, label in zip(preds, gold_labels):
             total += 1
             if pred == label:
@@ -66,13 +68,13 @@ for epoch in range(EPOCHS):
         optimizer.zero_grad()
         losses.append(loss.item())
     print(f"Train loss on epoch {epoch}: {np.mean(losses)}")
-    metrics = []
+    batch_metrics = []
     model.eval()
     for batch in tqdm(lr_loader):
         with torch.no_grad():
             logits = model(**batch).logits
         preds = torch.argmax(logits, dim=-1).detach()
         labels = batch["labels"].detach()
-        metrics.append(accuracy(preds, labels))
-    print(f"Accuracy on epoch {epoch}: {np.mean(metrics)}")
+        batch_metrics.append(batch_accuracy(preds, labels))
+    print(f"Accuracy on epoch {epoch}: {np.mean(batch_metrics)}")
 
