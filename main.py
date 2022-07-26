@@ -1,5 +1,6 @@
 # https://github.com/huggingface/transformers/blob/main/examples/pytorch/token-classification/run_ner_no_trainer.py
 from typing import Dict
+from argparse import ArgumentParser
 
 import torch
 from torch.utils.data import DataLoader
@@ -9,6 +10,16 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
 from dataset import LemmaRulePreprocessor, LemmaRuleDataset
+
+parser = ArgumentParser()
+parser.add_argument("--pretrained_model_name", type=str)
+parser.add_argument("--max_length", type=int)
+parser.add_argument("--device", type=str, default="cpu")
+parser.add_argument("--batch_size", type=int, default=24)
+parser.add_argument("--learning_rate", type=float, default=1e-5)
+parser.add_argument("--epochs", type=int, default=5)
+args = parser.parse_args()
+
 
 EPOCHS = 1
 NAME = "tartuNLP/EstBERT"
