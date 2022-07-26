@@ -12,8 +12,9 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from dataset import LemmaRulePreprocessor, LemmaRuleDataset
 
 parser = ArgumentParser()
-parser.add_argument("--pretrained_model_name", type=str)
-parser.add_argument("--max_length", type=int)
+parser.add_argument("--pretrained_model_name", type=str, default="tartuNLP/EstBERT")
+parser.add_argument("--dataset_name", type=str, default="et_edt")
+parser.add_argument("--max_length", type=int, default=224)
 parser.add_argument("--device", type=str, default="cpu")
 parser.add_argument("--batch_size", type=int, default=24)
 parser.add_argument("--learning_rate", type=float, default=1e-5)
@@ -21,32 +22,33 @@ parser.add_argument("--epochs", type=int, default=5)
 args = parser.parse_args()
 
 
-EPOCHS = 1
-NAME = "tartuNLP/EstBERT"
-MAX_LENGTH = 224
-DEVICE = torch.device("cpu")
-BATCH_SIZE = 4
-LEARNING_RATE = 1e-5
+epochs = args["epochs"]
+name = args["pretrained_model_name"]
+max_lengths = args["max_length"]
+device = args["device"]
+batch_size = args["batch_size"]
+learning_rate = args["learning_rate"]
+dataset_name = args["dataset_name"]
 
 
 lp = LemmaRulePreprocessor()
 
-dataset = load_dataset("universal_dependencies", "et_edt")
+dataset = load_dataset("universal_dependencies", dataset_name)
 dataset = lp(dataset["test"])
 
-tokenizer = AutoTokenizer.from_pretrained(NAME)
-model = AutoModelForTokenClassification.from_pretrained(NAME, num_labels=lp.rule_map.num_labels)
+tokenizer = AutoTokenizer.from_pretrained(name)
+model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
 
 lr_dataset = LemmaRuleDataset(
     dataset=dataset,
     tokenizer=tokenizer,
-    device=DEVICE,
-    max_length=MAX_LENGTH,
+    device=device,
+    max_length=max_lengths,
 )
 
-lr_loader = DataLoader(lr_dataset, batch_size=BATCH_SIZE)
+lr_loader = DataLoader(lr_dataset, batch_size=batch_size)
 
-optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=LEARNING_RATE)
+optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
 
 
 def batch_accuracy(batch_predictions: torch.tensor, batch_labels: torch.tensor) -> float:
@@ -74,7 +76,7 @@ def batch_accuracy(batch_predictions: torch.tensor, batch_labels: torch.tensor) 
     return value
 
 
-for epoch in range(EPOCHS):
+for epoch in range(epochs):
     losses = []
     model.train()
     for batch in tqdm(lr_loader):
