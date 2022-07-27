@@ -22,13 +22,13 @@ parser.add_argument("--epochs", type=int, default=5)
 args = parser.parse_args()
 
 
-epochs = args["epochs"]
-name = args["pretrained_model_name"]
-max_lengths = args["max_length"]
-device = args["device"]
-batch_size = args["batch_size"]
-learning_rate = args["learning_rate"]
-dataset_name = args["dataset_name"]
+epochs = args.epochs
+name = args.pretrained_model_name
+max_lengths = args.max_length
+device = args.device
+batch_size = args.batch_size
+learning_rate = args.learning_rate
+dataset_name = args.dataset_name
 
 if __name__ == "__main__":
     lp = LemmaRulePreprocessor()
