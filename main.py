@@ -36,7 +36,6 @@ if __name__ == "__main__":
     dataset = load_dataset("universal_dependencies", dataset_name)
 
     tokenizer = AutoTokenizer.from_pretrained(name)
-    model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
 
     train_ds = LemmaRuleDataset(
         dataset=lp(dataset["train"]),
@@ -51,6 +50,8 @@ if __name__ == "__main__":
         device=device,
         max_length=max_length,
     )
+
+    model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
 
     train_loader = DataLoader(train_ds, batch_size=batch_size)
     validation_loader = DataLoader(validation_ds, batch_size=batch_size)
