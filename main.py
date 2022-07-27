@@ -50,6 +50,8 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
 
+    model.to(device)
+
     for epoch in range(epochs):
         losses = []
         model.train()
