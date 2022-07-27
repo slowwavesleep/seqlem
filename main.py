@@ -21,6 +21,8 @@ parser.add_argument("--learning_rate", type=float, default=1e-5)
 parser.add_argument("--epochs", type=int, default=5)
 parser.add_argument("--label_all_tokens", default=False, action="store_true")
 parser.add_argument("--ignore_index", type=int, default=-100)
+parser.add_argument("--allow_lr_copy", default=False, action="store_true")
+# parser.add_argument("--lemma_rule_column_name", type=str, default="lemma_rules")
 args = parser.parse_args()
 
 
@@ -33,9 +35,13 @@ learning_rate = args.learning_rate
 dataset_name = args.dataset_name
 label_all_tokens = args.label_all_tokens
 ignore_index = args.ignore_index
+allow_lr_copy = args.allow_lr_copy
 
 if __name__ == "__main__":
-    lp = LemmaRulePreprocessor()
+    lp = LemmaRulePreprocessor(
+        allow_lr_copy=allow_lr_copy,
+        ignore_index=ignore_index,
+    )
 
     dataset = load_dataset("universal_dependencies", dataset_name)
 
