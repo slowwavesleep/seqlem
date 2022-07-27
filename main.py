@@ -19,6 +19,7 @@ parser.add_argument("--device", type=str, default="cpu")
 parser.add_argument("--batch_size", type=int, default=24)
 parser.add_argument("--learning_rate", type=float, default=1e-5)
 parser.add_argument("--epochs", type=int, default=5)
+parser.add_argument("--label_all_tokens", default=False, action="store_true")
 args = parser.parse_args()
 
 
@@ -29,6 +30,7 @@ device = args.device
 batch_size = args.batch_size
 learning_rate = args.learning_rate
 dataset_name = args.dataset_name
+label_all_tokens = args.label_all_tokens
 
 if __name__ == "__main__":
     lp = LemmaRulePreprocessor()
@@ -42,6 +44,7 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         device=device,
         max_length=max_length,
+        label_all_tokens=label_all_tokens,
     )
 
     validation_ds = LemmaRuleDataset(
@@ -49,6 +52,7 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         device=device,
         max_length=max_length,
+        label_all_tokens=label_all_tokens,
     )
 
     model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
