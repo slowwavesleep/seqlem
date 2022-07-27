@@ -61,7 +61,7 @@ if __name__ == "__main__":
             optimizer.step()
             optimizer.zero_grad()
             losses.append(loss.item())
-        print(f"Train loss on epoch {epoch}: {np.mean(losses)}")
+        print(f"Train loss on epoch {epoch + 1}: {np.mean(losses)}")
         batch_metrics = []
         model.eval()
         for batch in tqdm(lr_loader):
@@ -70,5 +70,5 @@ if __name__ == "__main__":
             preds = torch.argmax(logits, dim=-1).detach()
             labels = batch["labels"].detach()
             batch_metrics.append(batch_accuracy(preds, labels))
-        print(f"Accuracy on epoch {epoch}: {np.mean(batch_metrics)}")
+        print(f"Accuracy on epoch {epoch + 1}: {np.mean(batch_metrics)}")
 
