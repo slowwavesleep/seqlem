@@ -20,6 +20,7 @@ parser.add_argument("--batch_size", type=int, default=24)
 parser.add_argument("--learning_rate", type=float, default=1e-5)
 parser.add_argument("--epochs", type=int, default=5)
 parser.add_argument("--label_all_tokens", default=False, action="store_true")
+parser.add_argument("--ignore_index", type=int, default=-100)
 args = parser.parse_args()
 
 
@@ -31,6 +32,7 @@ batch_size = args.batch_size
 learning_rate = args.learning_rate
 dataset_name = args.dataset_name
 label_all_tokens = args.label_all_tokens
+ignore_index = args.ignore_index
 
 if __name__ == "__main__":
     lp = LemmaRulePreprocessor()
@@ -45,6 +47,7 @@ if __name__ == "__main__":
         device=device,
         max_length=max_length,
         label_all_tokens=label_all_tokens,
+        ignore_index=ignore_index,
     )
 
     validation_ds = LemmaRuleDataset(
@@ -53,6 +56,7 @@ if __name__ == "__main__":
         device=device,
         max_length=max_length,
         label_all_tokens=label_all_tokens,
+        ignore_index=ignore_index,
     )
 
     model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
@@ -81,6 +85,6 @@ if __name__ == "__main__":
                 logits = model(**batch).logits
             preds = torch.argmax(logits, dim=-1).detach()
             labels = batch["labels"].detach()
-            batch_metrics.append(batch_accuracy(preds, labels))
+            batch_metrics.append(batch_accuracy(preds, labels, ignore_index=ignore_index))
         print(f"Accuracy on epoch {epoch + 1}: {np.mean(batch_metrics)}")
 

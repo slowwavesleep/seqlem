@@ -1,17 +1,19 @@
 import torch
 
 
-def batch_accuracy(batch_predictions: torch.tensor, batch_labels: torch.tensor) -> float:
+def batch_accuracy(
+        batch_predictions: torch.tensor, batch_labels: torch.tensor, ignore_index: int = -100,
+) -> float:
     if not batch_predictions.shape == batch_labels.shape:
         raise ValueError(
             f"Shape mismatch between predictions and gold labels: {batch_predictions.shape} vs. {batch_labels.shape}"
         )
     true_predictions = [
-        [p for (p, l) in zip(pred, gold_label) if l != -100]
+        [p for (p, l) in zip(pred, gold_label) if l != ignore_index]
         for pred, gold_label in zip(batch_predictions, batch_labels)
     ]
     true_labels = [
-        [l for (p, l) in zip(pred, gold_label) if l != -100]
+        [l for (p, l) in zip(pred, gold_label) if l != ignore_index]
         for pred, gold_label in zip(batch_predictions, batch_labels)
     ]
 
