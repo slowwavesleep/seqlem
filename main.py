@@ -24,7 +24,7 @@ args = parser.parse_args()
 
 epochs = args.epochs
 name = args.pretrained_model_name
-max_lengths = args.max_length
+max_length = args.max_length
 device = args.device
 batch_size = args.batch_size
 learning_rate = args.learning_rate
@@ -34,19 +34,26 @@ if __name__ == "__main__":
     lp = LemmaRulePreprocessor()
 
     dataset = load_dataset("universal_dependencies", dataset_name)
-    dataset = lp(dataset["test"])
 
     tokenizer = AutoTokenizer.from_pretrained(name)
     model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
 
-    lr_dataset = LemmaRuleDataset(
-        dataset=dataset,
+    train_ds = LemmaRuleDataset(
+        dataset=lp(dataset["train"]),
         tokenizer=tokenizer,
         device=device,
-        max_length=max_lengths,
+        max_length=max_length,
     )
 
-    lr_loader = DataLoader(lr_dataset, batch_size=batch_size)
+    validation_ds = LemmaRuleDataset(
+        dataset=lp(dataset["validation"]),
+        tokenizer=tokenizer,
+        device=device,
+        max_length=max_length,
+    )
+
+    train_loader = DataLoader(train_ds, batch_size=batch_size)
+    validation_loader = DataLoader(validation_ds, batch_size=batch_size)
 
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
 
@@ -55,7 +62,7 @@ if __name__ == "__main__":
     for epoch in range(epochs):
         losses = []
         model.train()
-        for batch in tqdm(lr_loader):
+        for batch in tqdm(train_loader):
             loss = model(**batch).loss
             loss.backward()
             optimizer.step()
@@ -64,7 +71,7 @@ if __name__ == "__main__":
         print(f"Train loss on epoch {epoch + 1}: {np.mean(losses)}")
         batch_metrics = []
         model.eval()
-        for batch in tqdm(lr_loader):
+        for batch in tqdm(validation_loader):
             with torch.no_grad():
                 logits = model(**batch).logits
             preds = torch.argmax(logits, dim=-1).detach()
