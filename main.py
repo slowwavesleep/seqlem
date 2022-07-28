@@ -23,6 +23,7 @@ parser.add_argument("--label_all_tokens", default=False, action="store_true")
 parser.add_argument("--ignore_index", type=int, default=-100)
 parser.add_argument("--allow_lr_copy", default=False, action="store_true")
 parser.add_argument("--model_save_path", type=str, default="./model")
+parser.add_argument("--unk_rule_token", type=str, default="<UNK>")
 # parser.add_argument("--lemma_rule_column_name", type=str, default="lemma_rules")
 args = parser.parse_args()
 
@@ -38,11 +39,13 @@ label_all_tokens = args.label_all_tokens
 ignore_index = args.ignore_index
 allow_lr_copy = args.allow_lr_copy
 model_save_path = args.model_save_path
+unk_rule_token = args.unk_rule_token
 
 if __name__ == "__main__":
     lp = LemmaRulePreprocessor(
         allow_lr_copy=allow_lr_copy,
         ignore_index=ignore_index,
+        unk_rule_token=unk_rule_token,
     )
 
     dataset = load_dataset("universal_dependencies", dataset_name)
