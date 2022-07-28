@@ -67,9 +67,12 @@ if __name__ == "__main__":
         ignore_index=ignore_index,
     )
 
+    # initialize hf config with previously generated mappings
+    # this is needed to be able to save label names along with the model itself in a non-cumbersome way
     config = AutoConfig.from_pretrained(
         name, num_labels=lp.rule_map.num_labels, label2id=lp.rule_map.rule2id, id2label=lp.rule_map.id2rule
     )
+    # reinitializes classification head weights from scratch
     model = AutoModelForTokenClassification.from_pretrained(name, config=config)
     model.to(device)
 
