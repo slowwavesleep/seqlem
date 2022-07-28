@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 from tqdm.auto import tqdm
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoConfig
 
 from dataset import LemmaRulePreprocessor, LemmaRuleDataset
 from utils import batch_accuracy
@@ -22,6 +22,7 @@ parser.add_argument("--epochs", type=int, default=5)
 parser.add_argument("--label_all_tokens", default=False, action="store_true")
 parser.add_argument("--ignore_index", type=int, default=-100)
 parser.add_argument("--allow_lr_copy", default=False, action="store_true")
+parser.add_argument("--model_save_path", type=str, default="./model")
 # parser.add_argument("--lemma_rule_column_name", type=str, default="lemma_rules")
 args = parser.parse_args()
 
@@ -36,6 +37,7 @@ dataset_name = args.dataset_name
 label_all_tokens = args.label_all_tokens
 ignore_index = args.ignore_index
 allow_lr_copy = args.allow_lr_copy
+model_save_path = args.model_save_path
 
 if __name__ == "__main__":
     lp = LemmaRulePreprocessor(
@@ -65,14 +67,16 @@ if __name__ == "__main__":
         ignore_index=ignore_index,
     )
 
-    model = AutoModelForTokenClassification.from_pretrained(name, num_labels=lp.rule_map.num_labels)
+    config = AutoConfig.from_pretrained(
+        name, num_labels=lp.rule_map.num_labels, label2id=lp.rule_map.rule2id, id2label=lp.rule_map.id2rule
+    )
+    model = AutoModelForTokenClassification.from_pretrained(name, config=config)
+    model.to(device)
 
     train_loader = DataLoader(train_ds, batch_size=batch_size)
     validation_loader = DataLoader(validation_ds, batch_size=batch_size)
 
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
-
-    model.to(device)
 
     for epoch in range(epochs):
         losses = []
@@ -94,3 +98,4 @@ if __name__ == "__main__":
             batch_metrics.append(batch_accuracy(preds, labels, ignore_index=ignore_index))
         print(f"Accuracy on epoch {epoch + 1}: {np.mean(batch_metrics)}")
 
+    model.save_pretrained(model_save_path)
