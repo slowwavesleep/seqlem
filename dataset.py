@@ -3,6 +3,7 @@ from itertools import chain
 import json
 
 import torch
+from transformers import PreTrainedModel
 from datasets import Dataset, DatasetDict
 from torch.utils.data import Dataset as TorchDataset
 
@@ -21,6 +22,19 @@ class RuleMap:
     def _init_helper(self):
         assert self.unk_rule_token in self.rule2id
         self.id2rule = {value: key for key, value in self.rule2id.items()}
+
+    @classmethod
+    def from_model(
+            cls,
+            model: PreTrainedModel,
+            unk_rule_token: str = "<UNK>"
+    ) -> "RuleMap":
+        rule2id = model.config.label2id
+        if unk_rule_token not in rule2id:
+            raise ValueError("Unknown rule token not found in model mapping")
+        # id2rule = model.config.id2label
+        # if set(id2rule)
+        return cls(rule2id=rule2id, unk_rule_token=unk_rule_token)
 
     @classmethod
     def from_dataset(
