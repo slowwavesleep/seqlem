@@ -3,7 +3,7 @@ from itertools import chain
 import json
 
 import torch
-from datasets import load_dataset, Dataset, DatasetDict
+from datasets import Dataset, DatasetDict
 from torch.utils.data import Dataset as TorchDataset
 
 from lemma_rules import gen_lemma_rule
