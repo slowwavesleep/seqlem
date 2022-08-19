@@ -84,6 +84,8 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
 
+    max_accuracy = 0
+
     for epoch in range(epochs):
         losses = []
         model.train()
@@ -102,6 +104,9 @@ if __name__ == "__main__":
             preds = torch.argmax(logits, dim=-1).detach()
             labels = batch["labels"].detach()
             batch_metrics.append(batch_accuracy(preds, labels, ignore_index=ignore_index))
-        print(f"Accuracy on epoch {epoch + 1}: {np.mean(batch_metrics)}")
-
-    model.save_pretrained(model_save_path)
+        cur_accuracy = np.mean(batch_metrics)
+        print(f"Accuracy on epoch {epoch + 1}: {cur_accuracy}")
+        if cur_accuracy > max_accuracy:
+            model.save_pretrained(model_save_path)
+            print(f"Accuracy increased from {max_accuracy} to {cur_accuracy}. Saving current checkpoint...")
+            max_accuracy = cur_accuracy
