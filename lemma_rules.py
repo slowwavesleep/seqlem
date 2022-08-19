@@ -30,7 +30,14 @@ def gen_lemma_rule(form: str, lemma: str, allow_copy: bool) -> str:
     previous_case = -1
     lemma_casing = ""
     for i, c in enumerate(lemma):
-        case = "↑" if c.lower() != c else "↓"
+        # prevent non-alphabetic characters from breaking spans in casing rules
+        if not (c.islower() and c.isupper()):
+            if previous_case == -1:
+                case = "↓"
+            else:
+                case = previous_case
+        else:
+            case = "↑" if c.lower() != c else "↓"
         if case != previous_case:
             lemma_casing += "{}{}{}".format(
                 "¦" if lemma_casing else "", case, i if i <= len(lemma) // 2 else i - len(lemma)
