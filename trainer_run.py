@@ -92,7 +92,7 @@ data = data.map(add_rule_labels, batched=True, fn_kwargs={"rule_map": rule2id})
 tokenized = data.map(tokenize_and_align_labels, batched=True)
 tokenized = tokenized.remove_columns(set(tokenized.column_names["train"]) - {"input_ids", "token_type_ids", "attention_mask", "labels"})
 
-batch_size = 4
+batch_size = 96
 args = TrainingArguments(
     "lemmatization",
     evaluation_strategy="epoch",
