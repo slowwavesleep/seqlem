@@ -118,8 +118,8 @@ args = TrainingArguments(
 trainer = Trainer(
     model,
     args,
-    train_dataset=tokenized["validation"],
-    eval_dataset=tokenized["test"],
+    train_dataset=tokenized["train"],
+    eval_dataset=tokenized["validation"],
     data_collator=data_collator,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics,
