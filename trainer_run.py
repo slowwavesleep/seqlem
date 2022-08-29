@@ -88,7 +88,7 @@ data_collator = DataCollatorForTokenClassification(
 )
 
 data = load_dataset("universal_dependencies", "et_edt")
-data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": True})
+data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": False})
 data = data.remove_columns(set(data.column_names["train"]) - {"idx", "tokens", "lemma_rules", "lemmas"})
 
 
