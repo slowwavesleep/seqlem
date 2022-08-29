@@ -3,7 +3,7 @@ from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
-from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments
+from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig
 import torch
 
 from dataset import generate_rules
@@ -70,7 +70,7 @@ def compute_metrics(p):
 
 MODEL_NAME = "tartuNLP/EstBERT"
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME)
+
 
 data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
@@ -91,6 +91,9 @@ data = data.map(add_rule_labels, batched=True, fn_kwargs={"rule_map": rule2id})
 
 tokenized = data.map(tokenize_and_align_labels, batched=True)
 tokenized = tokenized.remove_columns(set(tokenized.column_names["train"]) - {"input_ids", "token_type_ids", "attention_mask", "labels"})
+
+config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2rule)
+model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
 
 batch_size = 96
 args = TrainingArguments(
