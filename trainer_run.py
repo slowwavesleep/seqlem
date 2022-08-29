@@ -110,7 +110,7 @@ args = TrainingArguments(
     learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
-    num_train_epochs=3,
+    num_train_epochs=10,
     weight_decay=0.01,
     eval_accumulation_steps=5,
 )
