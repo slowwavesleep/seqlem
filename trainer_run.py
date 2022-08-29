@@ -5,6 +5,7 @@ from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
 from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig
 import torch
+import numpy as np
 
 from dataset import generate_rules
 
@@ -48,23 +49,30 @@ def tokenize_and_align_labels(examples: Dataset, label_all_tokens: bool = True):
 
 
 def compute_metrics(p):
-    # predictions, labels = p
-    # predictions = np.argmax(predictions, axis=2)
+    predictions, labels = p
+    predictions = np.argmax(predictions, axis=2)
 
-    # # Remove ignored index (special tokens)
-    # true_predictions = [
-    #     [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
-    #     for prediction, label in zip(predictions, labels)
-    # ]
-    # true_labels = [
-    #     [id2rule[l] for (p, l) in zip(prediction, label) if l != -100]
-    #     for prediction, label in zip(predictions, labels)
-    # ]
+    # Remove ignored index (special tokens)
+    true_predictions = [
+        [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    true_labels = [
+        [id2rule[l] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
 
-    # print(true_predictions)
+    total = 0
+    correct = 0
+    for preds, gold_labels in zip(true_predictions, true_labels):
+        for pred, label in zip(preds, gold_labels):
+            total += 1
+            if pred == label:
+                correct += 1
+    value = correct / total
 
     return {
-        "accuracy": 0
+        "accuracy": value
     }
 
 
