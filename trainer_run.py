@@ -82,6 +82,7 @@ MODEL_NAME = "DeepPavlov/rubert-base-cased"
 DATASET_NAME = "ru_syntagrus"
 ALLOW_COPY = True
 MAX_LENGTH = 128
+BATCH_SIZE = 128
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -109,7 +110,7 @@ tokenized = tokenized.remove_columns(set(tokenized.column_names["train"]) - {"in
 config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2rule)
 model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
 
-batch_size = 96
+batch_size = BATCH_SIZE
 args = TrainingArguments(
     "lemmatization",
     evaluation_strategy="epoch",
