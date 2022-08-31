@@ -81,7 +81,7 @@ def compute_metrics(p):
 MODEL_NAME = "DeepPavlov/rubert-base-cased"
 DATASET_NAME = "ru_syntagrus"
 ALLOW_COPY = True
-MAX_LENGTH = 128
+MAX_LENGTH = 192
 BATCH_SIZE = 128
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
