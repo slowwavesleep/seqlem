@@ -93,7 +93,7 @@ data_collator = DataCollatorForTokenClassification(
     return_tensors="pt",
 )
 
-data = load_dataset("universal_dependencies", "DATASET_NAME")
+data = load_dataset("universal_dependencies", DATASET_NAME)
 data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": ALLOW_COPY})
 data = data.remove_columns(set(data.column_names["train"]) - {"idx", "tokens", "lemma_rules", "lemmas"})
 
