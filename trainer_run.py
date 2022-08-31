@@ -89,7 +89,7 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
     padding="longest",
-    max_length=128,
+    max_length=MAX_LENGTH,
     return_tensors="pt",
 )
 
