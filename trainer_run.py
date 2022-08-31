@@ -76,19 +76,25 @@ def compute_metrics(p):
     }
 
 
-MODEL_NAME = "tartuNLP/EstBERT"
+# MODEL_NAME = "tartuNLP/EstBERT"
+# DATASET_NAME = "et_edt"
+MODEL_NAME = "DeepPavlov/rubert-base-cased"
+DATASET_NAME = "ru_syntagrus"
+ALLOW_COPY = True
+MAX_LENGTH = 128
+
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
 
 data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
     padding="longest",
-    max_length=256,
+    max_length=128,
     return_tensors="pt",
 )
 
-data = load_dataset("universal_dependencies", "et_edt")
-data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": False})
+data = load_dataset("universal_dependencies", "DATASET_NAME")
+data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": ALLOW_COPY})
 data = data.remove_columns(set(data.column_names["train"]) - {"idx", "tokens", "lemma_rules", "lemmas"})
 
 
