@@ -3,7 +3,7 @@ from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
-from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig, EarlyStoppingCallback
+from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig, EarlyStoppingCallback, pipeline
 import torch
 import numpy as np
 
@@ -81,9 +81,9 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
-TRAIN_EPOCHS = 1
-EVAL_PER_EPOCH = 1 # 3
-EARLY_STOPPING_PATIENCE = 1
+TRAIN_EPOCHS = 100
+EVAL_PER_EPOCH = 3
+EARLY_STOPPING_PATIENCE = 6
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -144,4 +144,10 @@ trainer = Trainer(
 )
 
 trainer.train()
-print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions.shape)
+# print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions.shape)
+
+# lemma_pipeline = pipeline(
+#     model=trainer.model,
+#     task="token-classification",
+#     aggregation_strategy="first",
+# )
