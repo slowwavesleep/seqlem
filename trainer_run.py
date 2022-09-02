@@ -83,7 +83,8 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
-TRAIN_EPOCHS = 2
+TRAIN_EPOCHS = 15
+EVAL_PER_EPOCH = 3
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -112,7 +113,7 @@ config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2ru
 model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
 
 batch_size = BATCH_SIZE
-eval_steps = len(tokenized["train"]) // batch_size // 6
+eval_steps = len(tokenized["train"]) // batch_size // EVAL_PER_EPOCH
 print(eval_steps)
 args = TrainingArguments(
     "lemmatization",
@@ -129,7 +130,7 @@ args = TrainingArguments(
     greater_is_better=True,
     group_by_length=True,
     eval_steps=eval_steps,
-    save_steps=eval_steps * 3,
+    save_steps=eval_steps,
 )
 
 trainer = Trainer(
