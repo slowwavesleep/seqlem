@@ -129,6 +129,7 @@ args = TrainingArguments(
     greater_is_better=True,
     group_by_length=True,
     eval_steps=eval_steps,
+    save_steps=eval_steps * 3,
 )
 
 trainer = Trainer(
