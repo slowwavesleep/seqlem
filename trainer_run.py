@@ -114,7 +114,7 @@ batch_size = BATCH_SIZE
 eval_steps = len(tokenized["train"]) // batch_size // EVAL_PER_EPOCH
 print(eval_steps)
 args = TrainingArguments(
-    "lemmatization",
+    "seqlem_model",
     evaluation_strategy="steps",
     learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
