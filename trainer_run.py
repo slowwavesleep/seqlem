@@ -76,13 +76,13 @@ def compute_metrics(p):
     }
 
 
-# MODEL_NAME = "tartuNLP/EstBERT"
-# DATASET_NAME = "et_edt"
-MODEL_NAME = "DeepPavlov/rubert-base-cased"
-DATASET_NAME = "ru_syntagrus"
+MODEL_NAME = "tartuNLP/EstBERT"
+DATASET_NAME = "et_edt"
+# MODEL_NAME = "DeepPavlov/rubert-base-cased"
+# DATASET_NAME = "ru_syntagrus"
 ALLOW_COPY = True
-MAX_LENGTH = 192
-BATCH_SIZE = 128
+MAX_LENGTH = 256
+BATCH_SIZE = 96
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -120,13 +120,17 @@ args = TrainingArguments(
     num_train_epochs=10,
     weight_decay=0.01,
     eval_accumulation_steps=5,
+    fp16=True,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_accuracy",
+    greater_is_better=True,
+    group_by_length=True,
 )
 
 trainer = Trainer(
     model,
     args,
-    train_dataset=tokenized["validation"],
-    # train_dataset=tokenized["train"],
+    train_dataset=tokenized["train"],
     eval_dataset=tokenized["validation"],
     data_collator=data_collator,
     tokenizer=tokenizer,
