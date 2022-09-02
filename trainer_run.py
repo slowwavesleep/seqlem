@@ -144,3 +144,4 @@ trainer = Trainer(
 )
 
 trainer.train()
+print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions)
