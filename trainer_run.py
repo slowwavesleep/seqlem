@@ -111,9 +111,9 @@ tokenized = tokenized.remove_columns(set(tokenized.column_names["train"]) - {"in
 config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2rule)
 model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
 
-print(len(tokenized["validation"]))
-
 batch_size = BATCH_SIZE
+eval_steps = len(tokenized["validation"]) // batch_size // 6
+print(eval_steps)
 args = TrainingArguments(
     "lemmatization",
     evaluation_strategy="steps",
