@@ -112,7 +112,8 @@ config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2ru
 model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
 
 batch_size = BATCH_SIZE
-eval_steps = len(tokenized["validation"]) // batch_size // 6
+eval_steps = len(tokenized["train"]) // batch_size // 6
+print(eval_steps)
 args = TrainingArguments(
     "lemmatization",
     evaluation_strategy="steps",
