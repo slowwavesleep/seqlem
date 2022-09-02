@@ -81,8 +81,8 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
-TRAIN_EPOCHS = 2
-EVAL_PER_EPOCH = 3
+TRAIN_EPOCHS = 1
+EVAL_PER_EPOCH = 1 # 3
 EARLY_STOPPING_PATIENCE = 1
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
@@ -144,4 +144,4 @@ trainer = Trainer(
 )
 
 trainer.train()
-print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions)
+print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions.shape)
