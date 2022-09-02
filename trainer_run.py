@@ -113,7 +113,6 @@ model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=confi
 
 batch_size = BATCH_SIZE
 eval_steps = len(tokenized["validation"]) // batch_size // 6
-print(eval_steps)
 args = TrainingArguments(
     "lemmatization",
     evaluation_strategy="steps",
@@ -128,6 +127,7 @@ args = TrainingArguments(
     metric_for_best_model="eval_accuracy",
     greater_is_better=True,
     group_by_length=True,
+    eval_steps=eval_steps,
 )
 
 trainer = Trainer(
