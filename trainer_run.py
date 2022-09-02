@@ -83,6 +83,7 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
+TRAIN_EPOCHS = 2
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -117,7 +118,7 @@ args = TrainingArguments(
     learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
-    num_train_epochs=10,
+    num_train_epochs=TRAIN_EPOCHS,
     weight_decay=0.01,
     eval_accumulation_steps=5,
     fp16=True,
