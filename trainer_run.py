@@ -78,8 +78,6 @@ def compute_metrics(p):
 
 MODEL_NAME = "tartuNLP/EstBERT"
 DATASET_NAME = "et_edt"
-# MODEL_NAME = "DeepPavlov/rubert-base-cased"
-# DATASET_NAME = "ru_syntagrus"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
