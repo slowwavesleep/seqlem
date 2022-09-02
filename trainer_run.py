@@ -3,7 +3,7 @@ from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
-from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig
+from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig, EarlyStoppingCallback
 import torch
 import numpy as np
 
@@ -81,8 +81,9 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
-TRAIN_EPOCHS = 15
+TRAIN_EPOCHS = 2
 EVAL_PER_EPOCH = 3
+EARLY_STOPPING_PATIENCE = 1
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -112,7 +113,7 @@ model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=confi
 
 batch_size = BATCH_SIZE
 eval_steps = len(tokenized["train"]) // batch_size // EVAL_PER_EPOCH
-print(eval_steps)
+early_stopping = EarlyStoppingCallback(early_stopping_patience=EARLY_STOPPING_PATIENCE)
 args = TrainingArguments(
     "seqlem_model",
     evaluation_strategy="steps",
@@ -139,6 +140,7 @@ trainer = Trainer(
     data_collator=data_collator,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics,
+    callbacks=[early_stopping],
 )
 
 trainer.train()
