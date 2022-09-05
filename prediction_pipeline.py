@@ -20,5 +20,5 @@ lemma_pipeline = pipeline(
 )
 
 print(lemma_pipeline(dataset["test"]["text"][0]))
-print(lemma_pipeline(dataset["test"]["lemmas"][0]))
+print(dataset["test"]["lemmas"][0])
 
