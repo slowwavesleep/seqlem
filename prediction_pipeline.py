@@ -19,6 +19,6 @@ lemma_pipeline = pipeline(
     aggregation_strategy="first",
 )
 
-print(lemma_pipeline(dataset["test"]["texts"][0]))
+print(lemma_pipeline(dataset["test"]["text"][0]))
 
 
