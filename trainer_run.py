@@ -84,6 +84,7 @@ BATCH_SIZE = 96
 TRAIN_EPOCHS = 100
 EVAL_PER_EPOCH = 3
 EARLY_STOPPING_PATIENCE = 6
+LABEL_ALL_TOKENS = False
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -105,8 +106,10 @@ rule2id["unk"] = len(rule2id)
 id2rule = {value: key for key, value in rule2id.items()}
 data = data.map(add_rule_labels, batched=True, fn_kwargs={"rule_map": rule2id})
 
-tokenized = data.map(tokenize_and_align_labels, batched=True)
-tokenized = tokenized.remove_columns(set(tokenized.column_names["train"]) - {"input_ids", "token_type_ids", "attention_mask", "labels"})
+tokenized = data.map(tokenize_and_align_labels, batched=True, fn_kwargs={"label_all_tokens": LABEL_ALL_TOKENS})
+tokenized = tokenized.remove_columns(
+    set(tokenized.column_names["train"]) - {"input_ids", "token_type_ids", "attention_mask", "labels"}
+)
 
 config = AutoConfig.from_pretrained(MODEL_NAME, label2id=rule2id, id2label=id2rule)
 model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME, config=config)
