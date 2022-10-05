@@ -133,6 +133,7 @@ args = TrainingArguments(
     group_by_length=True,
     eval_steps=eval_steps,
     save_steps=eval_steps,
+    resume_from_checkpoint="./seqlem_model/checkpoint-11730",
 )
 
 trainer = Trainer(
@@ -147,10 +148,32 @@ trainer = Trainer(
 )
 
 trainer.train()
-# print(trainer.predict(test_dataset=tokenized["test"], ignore_keys=["labels"]).predictions.shape)
 
-# lemma_pipeline = pipeline(
-#     model=trainer.model,
-#     task="token-classification",
-#     aggregation_strategy="first",
-# )
+predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
+
+true_predictions = [
+    [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
+    for prediction, label in zip(predictions, labels)
+]
+
+with open("./test_preds.txt", "w") as writer:
+    for prediction in true_predictions:
+        writer.write(" ".join(prediction) + "\n")
+
+# def evaluate_dataset(df):
+#     predictions, labels, _ = trainer.predict(df)
+#     predictions = np.argmax(predictions, axis=2)
+#
+#     # Remove ignored index (special tokens)
+#     true_predictions = [
+#         [label_list[p] for (p, l) in zip(prediction, label) if l != -100]
+#         for prediction, label in zip(predictions, labels)
+#     ]
+#     true_labels = [
+#         [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
+#         for prediction, label in zip(predictions, labels)
+#     ]
+#
+#     results = metric.compute(predictions=true_predictions, references=true_labels)
+#
+#     return results
