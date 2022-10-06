@@ -150,13 +150,7 @@ trainer = Trainer(
 trainer.train()
 
 predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
-
-print(predictions.shape)
-
-print(labels.shape)
-
-print(metrics.shape)
-
+predictions = np.argmax(predictions, axis=2)
 
 true_predictions = [
     [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
