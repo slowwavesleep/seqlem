@@ -7,7 +7,7 @@ with open("et_edt-ud-test.conllu") as file:
 with open("test_preds.txt") as file:
     preds = []
     for line in file:
-        preds.append(line.split(" "))
+        preds.append(line.strip("\n").split(" "))
 
 
 for (true_sent, pred_sent) in zip(parsed, preds):
