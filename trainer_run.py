@@ -134,7 +134,6 @@ args = TrainingArguments(
     group_by_length=True,
     eval_steps=eval_steps,
     save_steps=eval_steps,
-    resume_from_checkpoint="./seqlem_model/checkpoint-11730",
 )
 
 trainer = Trainer(
