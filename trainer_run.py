@@ -8,6 +8,7 @@ import torch
 import numpy as np
 
 from dataset import generate_rules
+from lemma_rules import apply_lemma_rule
 
 
 def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
@@ -152,10 +153,21 @@ trainer.train()
 predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
 predictions = np.argmax(predictions, axis=2)
 
-true_predictions = [
+true_predictions: List[List[str]] = [
     [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
     for prediction, label in zip(predictions, labels)
 ]
+
+true_tokens: List[List[str]] = tokenized["test"]["tokens"]
+
+lemmatized: List[List[str]] = []
+
+for (token_list, pred_list) in zip(true_tokens, true_predictions):
+    assert len(token_list) == len(pred_list)
+    cur_lemmas = []
+    for (token, predicted_rule) in zip(token_list, pred_list):
+        cur_lemmas.append(apply_lemma_rule(token, predicted_rule))
+    lemmatized.append(cur_lemmas)
 
 with open("./test_preds.txt", "w") as writer:
     for prediction in true_predictions:
