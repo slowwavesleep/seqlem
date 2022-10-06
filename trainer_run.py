@@ -158,7 +158,7 @@ true_predictions: List[List[str]] = [
     for prediction, label in zip(predictions, labels)
 ]
 
-true_tokens: List[List[str]] = tokenized["test"]["tokens"]
+true_tokens: List[List[str]] = data["test"]["tokens"]
 
 lemmatized: List[List[str]] = []
 
@@ -170,7 +170,7 @@ for (token_list, pred_list) in zip(true_tokens, true_predictions):
     lemmatized.append(cur_lemmas)
 
 with open("./test_preds.txt", "w") as writer:
-    for prediction in true_predictions:
+    for prediction in lemmatized:
         writer.write(" ".join(prediction) + "\n")
 
 # def evaluate_dataset(df):
