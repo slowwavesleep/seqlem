@@ -81,8 +81,8 @@ DATASET_NAME = "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
-TRAIN_EPOCHS = 1
-EVAL_PER_EPOCH = 3
+TRAIN_EPOCHS = 1  # 100
+EVAL_PER_EPOCH = 1  # 3
 EARLY_STOPPING_PATIENCE = 6
 LABEL_ALL_TOKENS = False
 
@@ -150,6 +150,16 @@ trainer = Trainer(
 trainer.train()
 
 predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
+
+print(type(predictions))
+print(predictions)
+
+print(type(labels))
+print(labels)
+
+print(type(metrics))
+print(metrics)
+
 
 true_predictions = [
     [id2rule[p] for (p, l) in zip(prediction, label) if l != -100]
