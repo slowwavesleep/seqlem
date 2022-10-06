@@ -11,10 +11,12 @@ with open("test_preds.txt") as file:
 
 
 for (true_sent, pred_sent) in zip(parsed, preds):
-    print(true_sent)
-    print(pred_sent)
-    print()
-    assert len(true_sent) == len(pred_sent)
+
+
+    if len(true_sent) != len(pred_sent):
+        print(true_sent)
+        print(pred_sent)
+        print()
 
     for i, pred in enumerate(pred_sent):
         true_sent[i]["lemma"] = pred
