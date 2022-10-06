@@ -11,8 +11,9 @@ with open("test_preds.txt") as file:
 
 
 for (true_sent, pred_sent) in zip(parsed, preds):
-    print(len(true_sent))
-    print(len(pred_sent))
+    print(true_sent)
+    print(pred_sent)
+    print()
     assert len(true_sent) == len(pred_sent)
 
     for i, pred in enumerate(pred_sent):
