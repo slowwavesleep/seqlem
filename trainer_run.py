@@ -151,14 +151,11 @@ trainer.train()
 
 predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
 
-print(type(predictions))
-print(predictions)
+print(predictions.shape)
 
-print(type(labels))
-print(labels)
+print(labels.shape)
 
-print(type(metrics))
-print(metrics)
+print(metrics.shape)
 
 
 true_predictions = [
