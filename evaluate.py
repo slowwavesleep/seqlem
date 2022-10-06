@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 import conllu
 
 with open("et_edt-ud-test.conllu") as file:
@@ -12,11 +14,9 @@ with open("test_preds.txt") as file:
 
 for (true_sent, pred_sent) in zip(parsed, preds):
 
-
     if len(true_sent) != len(pred_sent):
-        print(true_sent)
-        print(pred_sent)
-        print()
+        for (a, b) in zip_longest(true_sent, pred_sent):
+            print(a, b)
 
     for i, pred in enumerate(pred_sent):
         true_sent[i]["lemma"] = pred
