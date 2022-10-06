@@ -12,9 +12,10 @@ with open("test_preds.txt") as file:
         preds.append(line.strip("\n").split(" "))
 
 
-for (true_sent, pred_sent) in zip(parsed, preds):
+for i, (true_sent, pred_sent) in enumerate(zip(parsed, preds)):
 
     if len(true_sent) != len(pred_sent):
+        print(i)
         for (a, b) in zip_longest(true_sent, pred_sent):
             print(a, b)
 
