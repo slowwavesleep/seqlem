@@ -36,6 +36,7 @@ def score(system_conllu_file, gold_conllu_file):
     p, r, f = el.precision, el.recall, el.f1
     return p, r, f
 
-f = score("predicted.conllu", "et_edt-ud-test.conllu")
+
+_, _, f = score("predicted.conllu", "et_edt-ud-test.conllu")
 
 print(f)
