@@ -165,7 +165,11 @@ for (token_list, pred_list) in zip(true_tokens, true_predictions):
     assert len(token_list) == len(pred_list)
     cur_lemmas = []
     for (token, predicted_rule) in zip(token_list, pred_list):
-        cur_lemmas.append(apply_lemma_rule(token, predicted_rule))
+        try:
+            cur_lemmas.append(apply_lemma_rule(token, predicted_rule))
+        except ValueError:
+            print(predicted_rule)
+            cur_lemmas.append(token)
     lemmatized.append(cur_lemmas)
 
 with open("./test_preds.txt", "w") as writer:
