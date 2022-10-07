@@ -4,7 +4,7 @@ import conllu
 
 import conll18_ud_eval as ud_eval
 
-with open("et_edt-ud-test.conllu") as file:
+with open("et_edt-ud-dev.conllu") as file:
     data = file.read()
     parsed = conllu.parse(data)
 

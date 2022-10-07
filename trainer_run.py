@@ -149,7 +149,7 @@ trainer = Trainer(
 
 trainer.train()
 
-predictions, labels, metrics = trainer.predict(tokenized["test"], metric_key_prefix="predict")
+predictions, labels, metrics = trainer.predict(tokenized["validation"], metric_key_prefix="predict")
 predictions = np.argmax(predictions, axis=2)
 
 true_predictions: List[List[str]] = [
@@ -157,7 +157,7 @@ true_predictions: List[List[str]] = [
     for prediction, label in zip(predictions, labels)
 ]
 
-true_tokens: List[List[str]] = data["test"]["tokens"]
+true_tokens: List[List[str]] = data["validation"]["tokens"]
 
 lemmatized: List[List[str]] = []
 
