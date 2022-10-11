@@ -20,8 +20,8 @@ for i, (true_sent, pred_sent) in enumerate(zip(parsed, preds)):
         for (a, b) in zip_longest(true_sent, pred_sent):
             print(a, b)
 
-    for i, pred in enumerate(pred_sent):
-        true_sent[i]["lemma"] = pred
+    for j, pred in enumerate(pred_sent):
+        true_sent[j]["lemma"] = pred
 
 with open("predicted.conllu", "w") as file:
     file.writelines([sentence.serialize() + "\n" for sentence in parsed])
