@@ -17,7 +17,7 @@ for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
         if pred_token["lemma"] == gold_token["lemma"]:
             correct += 1
         else:
-            print(pred_token["lemma"])
+            print(f'{pred_token["lemma"]} != {gold_token["lemma"]}')
         total += 1
 
 print(correct / total)
