@@ -3,7 +3,8 @@ from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
-from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, TrainingArguments, AutoConfig, EarlyStoppingCallback, pipeline
+from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, \
+    TrainingArguments, AutoConfig, EarlyStoppingCallback, pipeline
 import torch
 import numpy as np
 
@@ -19,6 +20,17 @@ def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
             list(map(lambda rule: rule_map.get(rule, rule_map["unk"]), sent))
         )
     return {"rule_labels": rule_labels}
+
+
+def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
+    lemmas: List[List[str]] = dataset["lemmas"]
+    processed_lemmas: List[List[str]] = []
+    for lemma_list in lemmas:
+        tmp = []
+        for lemma in lemma_list:
+            tmp.append(lemma.maketrans({key: "" for key in symbols}))
+        processed_lemmas.append(tmp)
+    return {"lemmas": processed_lemmas}
 
 
 def tokenize_and_align_labels(examples: Dataset, label_all_tokens: bool = True):
@@ -86,9 +98,9 @@ TRAIN_EPOCHS = 100  # 100
 EVAL_PER_EPOCH = 3  # 3
 EARLY_STOPPING_PATIENCE = 6
 LABEL_ALL_TOKENS = False
+REMOVE_SYMBOLS = True
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
 
 data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
@@ -98,9 +110,10 @@ data_collator = DataCollatorForTokenClassification(
 )
 
 data = load_dataset("universal_dependencies", DATASET_NAME)
+if REMOVE_SYMBOLS:
+    data = data.map(remove_symbols, batched=True)
 data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": ALLOW_COPY})
 data = data.remove_columns(set(data.column_names["train"]) - {"idx", "tokens", "lemma_rules", "lemmas"})
-
 
 rule2id = {key: i for i, key in enumerate(set(chain(*data["train"]["lemma_rules"])))}
 rule2id["unk"] = len(rule2id)
