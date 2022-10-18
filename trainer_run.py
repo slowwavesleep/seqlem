@@ -28,6 +28,7 @@ def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
     for lemma_list in lemmas:
         tmp = []
         for lemma in lemma_list:
+            print(lemma)
             tmp.append(lemma.maketrans({key: "" for key in symbols}))
         processed_lemmas.append(tmp)
     return {"lemmas": processed_lemmas}
