@@ -26,7 +26,7 @@ def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
     lemmas: List[List[str]] = dataset["lemmas"]
     upos_tags = dataset["upos"]
     processed_lemmas: List[List[str]] = []
-    for lemma_list, upos_list in (lemmas, upos_tags):
+    for lemma_list, upos_list in zip(lemmas, upos_tags):
         tmp = []
         for lemma, upos in zip(lemma_list, upos_list):
             processed_lemma = lemma
