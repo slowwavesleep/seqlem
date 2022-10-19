@@ -17,7 +17,8 @@ correct = 0
 for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
     for pred_token, gold_token in zip(pred_token_list, gold_token_list):
         true_lemma = gold_token["lemma"]
-        if REMOVE_SYMBOLS:
+        true_upos = gold_token["upos"]
+        if REMOVE_SYMBOLS and true_upos != "PUNCT" and len(true_lemma) > 1:
             true_lemma = true_lemma.replace("_", "").replace("=", "")
         if pred_token["lemma"] == true_lemma:
             correct += 1
