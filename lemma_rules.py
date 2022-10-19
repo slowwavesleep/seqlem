@@ -27,11 +27,12 @@ def min_edit_script(source: str, target: str, allow_copy: bool) -> str:
 def gen_lemma_rule(form: str, lemma: str, allow_copy: bool) -> str:
     form = form.lower()
 
+    # change back to original maybe
     previous_case = -1
     lemma_casing = ""
     for i, c in enumerate(lemma):
         # prevent non-alphabetic characters from breaking spans in casing rules
-        if not (c.islower() and c.isupper()):
+        if not c.islower() and not c.isupper():  # wrong condition?
             if previous_case == -1:
                 case = "↓"
             else:
@@ -68,8 +69,8 @@ def gen_lemma_rule(form: str, lemma: str, allow_copy: bool) -> str:
 
 
 def apply_lemma_rule(form: str, lemma_rule: str) -> str:
-    if ";" not in lemma_rule or "¦" not in lemma_rule:
-        raise ValueError("Invalid rule format")
+    # if ";" not in lemma_rule or "¦" not in lemma_rule:
+    #     raise ValueError("Invalid rule format")
     casing, rule = lemma_rule.split(";", 1)
     if rule.startswith("a"):
         lemma = rule[1:]
@@ -105,6 +106,7 @@ def apply_lemma_rule(form: str, lemma_rule: str) -> str:
                     j += 1
                 if i == 0:
                     lemma += form[rule_sources[0]: len(form) - rule_sources[1]]
+        # check this
         except:
             lemma = form
 
