@@ -69,12 +69,14 @@ def gen_lemma_rule(form: str, lemma: str, allow_copy: bool) -> str:
 
 
 def apply_lemma_rule(form: str, lemma_rule: str) -> str:
-    # if ";" not in lemma_rule or "¦" not in lemma_rule:
-    #     raise ValueError("Invalid rule format")
+    if ";" not in lemma_rule:
+        raise ValueError("Invalid rule format: ';' not in rule")
     casing, rule = lemma_rule.split(";", 1)
     if rule.startswith("a"):
         lemma = rule[1:]
     else:
+        if "¦" not in rule:
+            raise ValueError("Invalid rule format: '¦' not in rule")
         form = form.lower()
         rules, rule_sources = rule[1:].split("¦"), []
         assert len(rules) == 2
@@ -108,6 +110,7 @@ def apply_lemma_rule(form: str, lemma_rule: str) -> str:
                     lemma += form[rule_sources[0]: len(form) - rule_sources[1]]
         # check this
         except:
+            print("Some unknown error")
             lemma = form
 
     for rule in casing.split("¦"):
