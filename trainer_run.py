@@ -24,13 +24,15 @@ def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
 
 def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
     lemmas: List[List[str]] = dataset["lemmas"]
+    upos_tags = dataset["upos"]
     processed_lemmas: List[List[str]] = []
-    for lemma_list in lemmas:
+    for lemma_list, upos_list in (lemmas, upos_tags):
         tmp = []
-        for lemma in lemma_list:
+        for lemma, upos in zip(lemma_list, upos_list):
             processed_lemma = lemma
-            for symbol in symbols:
-                processed_lemma = processed_lemma.replace(symbol, "")
+            if upos != "PUNCT" and len(processed_lemma) > 1:
+                for symbol in symbols:
+                    processed_lemma = processed_lemma.replace(symbol, "")
             tmp.append(processed_lemma)
         processed_lemmas.append(tmp)
     return {"lemmas": processed_lemmas}
