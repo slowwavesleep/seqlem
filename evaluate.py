@@ -1,5 +1,3 @@
-from itertools import zip_longest
-
 import conllu
 
 import conll18_ud_eval as ud_eval
@@ -14,12 +12,6 @@ with open("test_preds.txt") as file:
         preds.append(line.strip("\n").split(" "))
 
 for i, (true_sent, pred_sent) in enumerate(zip(parsed, preds)):
-
-    if len(true_sent) != len(pred_sent):
-        print(i)
-        for (a, b) in zip_longest(true_sent, pred_sent):
-            print(a, b)
-
     for j, pred in enumerate(pred_sent):
         true_sent[j]["lemma"] = pred
 
