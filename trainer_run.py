@@ -3,8 +3,16 @@ from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
 from tqdm.auto import tqdm
-from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification, Trainer, \
-    TrainingArguments, AutoConfig, EarlyStoppingCallback, pipeline
+from transformers import (
+    AutoModelForTokenClassification,
+    AutoTokenizer,
+    DataCollatorForTokenClassification,
+    Trainer,
+    TrainingArguments,
+    AutoConfig,
+    EarlyStoppingCallback,
+    pipeline
+)
 import torch
 import numpy as np
 
