@@ -23,7 +23,9 @@ for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
         if pred_token["lemma"] == true_lemma:
             correct += 1
         else:
-            print(f'{pred_token["lemma"]} != {true_lemma}')
+            print(
+                f'original form: {pred_token["form"]}, predicted lemma: {pred_token["lemma"]}, true lemma: {true_lemma}'
+            )
         total += 1
 
 print(correct / total)
