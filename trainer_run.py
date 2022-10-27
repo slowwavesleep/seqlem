@@ -38,6 +38,7 @@ def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
         tmp = []
         for lemma, upos in zip(lemma_list, upos_list):
             processed_lemma = lemma
+            # symbol not in both form and lemma
             if upos != "PUNCT" and len(processed_lemma) > 1:
                 for symbol in symbols:
                     processed_lemma = processed_lemma.replace(symbol, "")
@@ -201,6 +202,14 @@ for (token_list, pred_list) in zip(true_tokens, true_predictions):
 with open("./test_preds.txt", "w") as writer:
     for prediction in lemmatized:
         writer.write(" ".join(prediction) + "\n")
+
+with open("./predicted_labels.txt", "w") as file:
+    for pred_sentence in predictions.tolist():
+        file.write(" ".join(pred_sentence) + "\n")
+
+with open("./true_labels.txt", "w") as file:
+    for true_sentence in labels.tolist():
+        file.write(" ".join(true_sentence) + "\n")
 
 # def evaluate_dataset(df):
 #     predictions, labels, _ = trainer.predict(df)
