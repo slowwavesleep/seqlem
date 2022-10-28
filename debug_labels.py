@@ -17,7 +17,7 @@ pred_lemmas = []
 with open(CONFIG_PATH) as file:
     config = json.loads(file.read())
 
-print(config)
+print(config["id2label"])
 
 
 with open(TRUE_LEMMAS_PATH) as file:
