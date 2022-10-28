@@ -59,13 +59,12 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
     for true_lemma_token, pred_lemma_token, pred_label, true_label in zip(
             true_lemma_sent, pred_lemma_sent, label_sent, true_sent
     ):
+        print(total)
         total += 1
         if true_lemma_token == pred_lemma_token:
             lemma_correct += 1
         if pred_label == true_label:
             label_correct += 1
-
-
 
 print(lemma_correct / total)
 print(label_correct / total)
