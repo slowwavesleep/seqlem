@@ -205,11 +205,11 @@ with open("./test_preds.txt", "w") as writer:
 
 with open("./predicted_labels.txt", "w") as file:
     for pred_sentence in predictions.tolist():
-        file.write(" ".join(pred_sentence) + "\n")
+        file.write(" ".join([str(el) for el in pred_sentence]) + "\n")
 
 with open("./true_labels.txt", "w") as file:
     for true_sentence in labels.tolist():
-        file.write(" ".join(true_sentence) + "\n")
+        file.write(" ".join([str(el) for el in true_sentence]) + "\n")
 
 # def evaluate_dataset(df):
 #     predictions, labels, _ = trainer.predict(df)
