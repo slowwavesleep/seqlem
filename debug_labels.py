@@ -98,8 +98,11 @@ for form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
                 config["id2label"][str(pred_label)],
                 config["id2label"][str(true_label)],
             )
-            print(apply_lemma_rule(form_token, config["id2label"][str(pred_label)]))
-            print(apply_lemma_rule(form_token, config["id2label"][str(true_label)]))
+            applied_predicted = apply_lemma_rule(form_token, config["id2label"][str(pred_label)])
+            applied_true = apply_lemma_rule(form_token, config["id2label"][str(true_label)])
+            print(applied_predicted)
+            print(applied_true)
+            print(f"Applying predicted and true rule has the same result: {applied_predicted == applied_true}")
             print()
 
 print(lemma_correct / total)
