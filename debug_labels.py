@@ -17,7 +17,6 @@ true_lemmas = []
 for sent in gold_conll:
     tmp = []
     for token in sent:
-        print(token)
         tmp.append(token["lemma"])
     true_lemmas.append(tmp)
 
