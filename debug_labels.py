@@ -35,25 +35,46 @@ with open(PRED_LEMMAS_PATH) as file:
         lemmas = line.strip("\n").split(" ")
         pred_lemmas.append(lemmas)
 
-equal_lengths = []
+actual_pred_labels = []
+actual_true_labels = []
 
-for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(true_lemmas, pred_lemmas, pred_labels, true_labels):
-    true_preds = []
-    for p, t in zip(label_sent, true_sent):
+for pred_sent, true_sent in zip(pred_labels, true_labels):
+    tmp_pred = []
+    tmp_true = []
+    for p, t in zip(pred_sent, true_sent):
         if t != -100:
-            true_preds.append(p)
-    equal_lengths.append(len(true_lemma_sent) == len(true_preds) == len(pred_lemma_sent))
+            tmp_pred.append(p)
+            tmp_true.append(t)
+    actual_pred_labels.append(tmp_pred)
+    actual_true_labels.append(tmp_true)
 
-print(all(equal_lengths))
 
-total = 0
-correct = 0
+for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
+        true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
+):
+    assert len(true_lemma_sent) == len(pred_lemma_sent) == len(label_sent) == len(true_sent)
 
-for true_sent, pred_sent in zip(true_labels, pred_labels):
-    for true_label, pred_label in zip(true_sent, pred_sent):
-        if true_label != -100:
-            total += 1
-            if true_label == pred_label:
-                correct += 1
+# equal_lengths = []
 
-print(correct / total)
+# for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(true_lemmas, pred_lemmas, pred_labels, true_labels):
+#     true_preds = []
+#     for p, t in zip(label_sent, true_sent):
+#         if t != -100:
+#             true_preds.append(p)
+#     equal_lengths.append(len(true_lemma_sent) == len(true_preds) == len(pred_lemma_sent))
+
+
+
+# print(all(equal_lengths))
+#
+# total = 0
+# correct = 0
+#
+# for true_sent, pred_sent in zip(true_labels, pred_labels):
+#     for true_label, pred_label in zip(true_sent, pred_sent):
+#         if true_label != -100:
+#             total += 1
+#             if true_label == pred_label:
+#                 correct += 1
+#
+# print(correct / total)
