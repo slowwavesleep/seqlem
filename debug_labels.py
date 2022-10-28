@@ -17,6 +17,7 @@ true_lemmas = []
 for sent in true_lemmas:
     tmp = []
     for token in sent:
+        print(token)
         tmp.append(token["lemma"])
     true_lemmas.append(tmp)
 
@@ -52,7 +53,7 @@ total = 0
 lemma_correct = 0
 label_correct = 0
 
-print(true_lemmas, len(pred_lemmas), len(actual_true_labels), len(actual_pred_labels))
+print(len(true_lemmas), len(pred_lemmas), len(actual_true_labels), len(actual_pred_labels))
 
 for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
