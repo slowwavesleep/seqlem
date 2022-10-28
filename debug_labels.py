@@ -2,6 +2,8 @@ import json
 
 from conllu import parse
 
+from lemma_rules import apply_lemma_rule
+
 TRUE_LABELS_PATH = "true_labels.txt"
 PRED_LABELS_PATH = "predicted_labels.txt"
 PRED_LEMMAS_PATH = "test_preds.txt"
@@ -23,13 +25,17 @@ with open(CONFIG_PATH) as file:
 with open(TRUE_LEMMAS_PATH) as file:
     gold_conll = parse(file.read())
 
+forms = []
 true_lemmas = []
 
 for sent in gold_conll:
-    tmp = []
+    tmp_lemma = []
+    tmp_form = []
     for token in sent:
-        tmp.append(token["lemma"].replace("_", "").replace("=", ""))
-    true_lemmas.append(tmp)
+        tmp_lemma.append(token["lemma"].replace("_", "").replace("=", ""))
+        tmp_form.append(token["form"])
+    true_lemmas.append(tmp_lemma)
+    forms.append(tmp_form)
 
 with open(TRUE_LABELS_PATH) as file:
     for line in file:
@@ -65,12 +71,12 @@ label_correct = 0
 
 print(len(true_lemmas), len(pred_lemmas), len(actual_true_labels), len(actual_pred_labels))
 
-for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
-        true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
+for form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
+        forms, true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
 ):
-    # assert len(true_lemma_sent) == len(pred_lemma_sent) == len(label_sent) == len(true_sent)
-    for true_lemma_token, pred_lemma_token, pred_label, true_label in zip(
-            true_lemma_sent, pred_lemma_sent, label_sent, true_sent
+    assert len(form_sent) == len(true_lemma_sent) == len(pred_lemma_sent) == len(label_sent) == len(true_sent)
+    for form_token, true_lemma_token, pred_lemma_token, pred_label, true_label in zip(
+            form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent
     ):
 
         total += 1
@@ -86,35 +92,16 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         if corr_lemma != corr_label:
             print(f"Correct lemma: {corr_lemma}, correct label {corr_label}")
             print(
+                form_token,
                 true_lemma_token,
                 pred_lemma_token,
                 config["id2label"][str(pred_label)],
                 config["id2label"][str(true_label)],
             )
+            print(apply_lemma_rule(form_token, config["id2label"][str(pred_label)]))
+            print(apply_lemma_rule(form_token, config["id2label"][str(true_label)]))
+            print()
 
 print(lemma_correct / total)
 print(label_correct / total)
 
-# equal_lengths = []
-
-# for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(true_lemmas, pred_lemmas, pred_labels, true_labels):
-#     true_preds = []
-#     for p, t in zip(label_sent, true_sent):
-#         if t != -100:
-#             true_preds.append(p)
-#     equal_lengths.append(len(true_lemma_sent) == len(true_preds) == len(pred_lemma_sent))
-
-
-
-# print(all(equal_lengths))
-#
-# total = 0
-# correct = 0
-#
-# for true_sent, pred_sent in zip(true_labels, pred_labels):
-#     for true_label, pred_label in zip(true_sent, pred_sent):
-#         if true_label != -100:
-#             total += 1
-#             if true_label == pred_label:
-#                 correct += 1
-#
