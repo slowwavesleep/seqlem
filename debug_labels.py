@@ -21,10 +21,13 @@ with open(PRED_LEMMAS_PATH) as file:
         lemmas = line.strip("\n").split(" ")
         pred_lemmas.append(lemmas)
 
-for lemma_sent, label_sent in zip(pred_lemmas, pred_labels):
-    print(label_sent)
-    true_label_length = len([label for label in label_sent if label != -100])
-    print(len(label_sent), true_label_length, len(lemma_sent))
+for lemma_sent, label_sent, true_sent in zip(pred_lemmas, pred_labels, true_labels):
+    true_preds = []
+    for p, t in zip(label_sent, true_sent):
+        if t != -100:
+            true_preds.append(p)
+
+    print(len(label_sent), len(true_preds), len(lemma_sent))
 
 
 total = 0
