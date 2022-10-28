@@ -1,3 +1,5 @@
+import json
+
 from conllu import parse
 
 TRUE_LABELS_PATH = "true_labels.txt"
@@ -5,9 +7,18 @@ PRED_LABELS_PATH = "predicted_labels.txt"
 PRED_LEMMAS_PATH = "test_preds.txt"
 TRUE_LEMMAS_PATH = "et_edt-ud-dev.conllu"
 
+CONFIG_PATH = "seqlem_model/checkpoint-255/config.json"
+
 true_labels = []
 pred_labels = []
 pred_lemmas = []
+
+
+with open(CONFIG_PATH) as file:
+    config = json.loads(file.read())
+
+print(config)
+
 
 with open(TRUE_LEMMAS_PATH) as file:
     gold_conll = parse(file.read())
