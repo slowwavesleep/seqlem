@@ -22,6 +22,7 @@ with open(PRED_LEMMAS_PATH) as file:
         pred_lemmas.append(lemmas)
 
 for lemma_sent, label_sent in zip(pred_lemmas, pred_labels):
+    print(label_sent)
     true_label_length = len([label for label in label_sent if label != -100])
     print(len(label_sent), true_label_length, len(lemma_sent))
 
