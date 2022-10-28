@@ -71,6 +71,8 @@ label_correct = 0
 
 print(len(true_lemmas), len(pred_lemmas), len(actual_true_labels), len(actual_pred_labels))
 
+same_results = []
+
 for form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         forms, true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
 ):
@@ -100,11 +102,14 @@ for form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
             )
             applied_predicted = apply_lemma_rule(form_token, config["id2label"][str(pred_label)])
             applied_true = apply_lemma_rule(form_token, config["id2label"][str(true_label)])
+            same_result = applied_predicted == applied_true
+            same_results.append(same_result)
             print(applied_predicted)
             print(applied_true)
-            print(f"Applying predicted and true rule has the same result: {applied_predicted == applied_true}")
+            print(f"Applying predicted and true rule has the same result: {same_result}")
             print()
 
+print(f"All differences are explained by many to one rule mapping: {all(same_results)}")
 print(lemma_correct / total)
 print(label_correct / total)
 
