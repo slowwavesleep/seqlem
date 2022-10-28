@@ -67,8 +67,9 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         if pred_label == true_label:
             label_correct += 1
 
-print(lemma_correct / total)
-print(label_correct / total)
+print(total)
+# print(lemma_correct / total)
+# print(label_correct / total)
 
 # equal_lengths = []
 
