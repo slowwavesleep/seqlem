@@ -14,7 +14,7 @@ with open(TRUE_LEMMAS_PATH) as file:
 
 true_lemmas = []
 
-for sent in true_lemmas:
+for sent in gold_conll:
     tmp = []
     for token in sent:
         print(token)
