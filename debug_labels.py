@@ -110,6 +110,5 @@ for form_sent, true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
             print()
 
 print(f"All differences are explained by many to one rule mapping: {all(same_results)}")
-print(lemma_correct / total)
-print(label_correct / total)
-
+print(f"Lemma accuracy: {lemma_correct / total}")
+print(f"Label accuracy: {label_correct / total}")
