@@ -73,6 +73,7 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
             corr_label = True
 
         if corr_lemma != corr_label:
+            print(f"Correct lemma: {corr_lemma}, correct label {corr_label}")
             print(true_lemma_token, pred_lemma_token, pred_label, true_label)
 
 print(lemma_correct / total)
