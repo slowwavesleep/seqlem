@@ -55,11 +55,12 @@ label_correct = 0
 for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
 ):
+    print(total)
     # assert len(true_lemma_sent) == len(pred_lemma_sent) == len(label_sent) == len(true_sent)
     for true_lemma_token, pred_lemma_token, pred_label, true_label in zip(
             true_lemma_sent, pred_lemma_sent, label_sent, true_sent
     ):
-        print(total)
+
         total += 1
         if true_lemma_token == pred_lemma_token:
             lemma_correct += 1
