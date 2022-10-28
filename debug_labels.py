@@ -17,7 +17,7 @@ pred_lemmas = []
 with open(CONFIG_PATH) as file:
     config = json.loads(file.read())
 
-print(config["id2label"])
+# print(config["id2label"])
 
 
 with open(TRUE_LEMMAS_PATH) as file:
@@ -85,7 +85,12 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
 
         if corr_lemma != corr_label:
             print(f"Correct lemma: {corr_lemma}, correct label {corr_label}")
-            print(true_lemma_token, pred_lemma_token, pred_label, true_label)
+            print(
+                true_lemma_token,
+                pred_lemma_token,
+                config["id2label"][str(pred_label)],
+                config["id2label"][str(true_label)],
+            )
 
 print(lemma_correct / total)
 print(label_correct / total)
