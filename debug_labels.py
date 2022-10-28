@@ -17,7 +17,7 @@ true_lemmas = []
 for sent in gold_conll:
     tmp = []
     for token in sent:
-        tmp.append(token["lemma"])
+        tmp.append(token["lemma"].replace("_", "").replace("=", ""))
     true_lemmas.append(tmp)
 
 with open(TRUE_LABELS_PATH) as file:
