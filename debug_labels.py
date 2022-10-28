@@ -48,11 +48,26 @@ for pred_sent, true_sent in zip(pred_labels, true_labels):
     actual_pred_labels.append(tmp_pred)
     actual_true_labels.append(tmp_true)
 
+total = 0
+lemma_correct = 0
+label_correct = 0
 
 for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
         true_lemmas, pred_lemmas, actual_pred_labels, actual_true_labels
 ):
     assert len(true_lemma_sent) == len(pred_lemma_sent) == len(label_sent) == len(true_sent)
+    for true_lemma_token, pred_lemma_token, pred_label, true_label in zip(
+            true_lemma_sent, pred_lemma_sent, label_sent, true_sent
+    ):
+        if true_lemma_token == pred_lemma_token:
+            lemma_correct += 1
+        if pred_label == true_label:
+            label_correct += 1
+
+        total += 1
+
+print(lemma_correct / total)
+print(label_correct / total)
 
 # equal_lengths = []
 
@@ -77,4 +92,3 @@ for true_lemma_sent, pred_lemma_sent, label_sent, true_sent in zip(
 #             if true_label == pred_label:
 #                 correct += 1
 #
-# print(correct / total)
