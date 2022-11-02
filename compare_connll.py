@@ -4,7 +4,7 @@ gold_file_path = "et_edt-ud-dev.conllu"
 pred_file_path = "predicted.conllu"
 
 REMOVE_SYMBOLS = True
-ALL_LOWER_CASE = False
+ALL_LOWER_CASE = True
 
 with open(gold_file_path) as file:
     gold_conll = parse(file.read())
