@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from itertools import chain
 
 from datasets import load_dataset, Dataset, load_metric
@@ -28,6 +28,14 @@ def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
             list(map(lambda rule: rule_map.get(rule, rule_map["unk"]), sent))
         )
     return {"rule_labels": rule_labels}
+
+
+def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str]) -> str:
+    processed_lemma = lemma
+    for symbol in symbols:
+        if symbol in lemma and symbol not in form and len(lemma) > 1:
+            processed_lemma = processed_lemma.replace(symbol, "")
+    return processed_lemma
 
 
 def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
