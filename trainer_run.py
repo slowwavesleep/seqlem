@@ -53,6 +53,12 @@ def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
     return {"lemmas": processed_lemmas}
 
 
+def to_caseless(dataset: Dataset):
+    lemmas: List[List[str]] = [[form.lower() for form in sent] for sent in dataset["lemmas"]]
+    forms: List[List[str]] = [[form.lower() for form in sent] for sent in dataset["tokens"]]
+    return {"lemmas": lemmas, "tokens": forms}
+
+
 def tokenize_and_align_labels(examples: Dataset, label_all_tokens: bool = True):
     tokenized_inputs = tokenizer(examples["tokens"], truncation=True, is_split_into_words=True)
 
@@ -119,6 +125,7 @@ EVAL_PER_EPOCH = 3  # 3
 EARLY_STOPPING_PATIENCE = 6
 LABEL_ALL_TOKENS = False
 REMOVE_SYMBOLS = True
+CASELESS_TRAIN = True
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
@@ -132,6 +139,8 @@ data_collator = DataCollatorForTokenClassification(
 data = load_dataset("universal_dependencies", DATASET_NAME)
 if REMOVE_SYMBOLS:
     data = data.map(remove_symbols, batched=True)
+if CASELESS_TRAIN:
+    data = data.map(to_caseless, batched=True)
 data = data.map(generate_rules, batched=True, fn_kwargs={"allow_lr_copy": ALLOW_COPY})
 data = data.remove_columns(set(data.column_names["train"]) - {"idx", "tokens", "lemma_rules", "lemmas"})
 
