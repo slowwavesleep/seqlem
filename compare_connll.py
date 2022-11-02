@@ -1,5 +1,7 @@
 from conllu import parse
 
+from trainer_run import remove_symbols_helper
+
 gold_file_path = "et_edt-ud-dev.conllu"
 pred_file_path = "predicted.conllu"
 
@@ -18,9 +20,11 @@ correct = 0
 for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
     for pred_token, gold_token in zip(pred_token_list, gold_token_list):
         true_lemma = gold_token["lemma"]
-        true_upos = gold_token["upos"]
-        if REMOVE_SYMBOLS and true_upos != "PUNCT" and len(true_lemma) > 1:
-            true_lemma = true_lemma.replace("_", "").replace("=", "")
+        # true_upos = gold_token["upos"]
+        true_form = gold_token["form"]
+        # if REMOVE_SYMBOLS and true_upos != "PUNCT" and len(true_lemma) > 1:
+        if REMOVE_SYMBOLS:
+            true_lemma = remove_symbols_helper(true_form, true_lemma, symbols=("_", "="))
         if ALL_LOWER_CASE:
             if pred_token["lemma"].lower() == true_lemma.lower():
                 correct += 1

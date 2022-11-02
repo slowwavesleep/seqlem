@@ -30,7 +30,7 @@ def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
     return {"rule_labels": rule_labels}
 
 
-def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str]) -> str:
+def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str, ...]) -> str:
     processed_lemma = lemma
     for symbol in symbols:
         if symbol in lemma and symbol not in form and len(lemma) > 1:
