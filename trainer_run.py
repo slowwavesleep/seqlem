@@ -40,18 +40,26 @@ def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str]) -> str:
 
 def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
     lemmas: List[List[str]] = dataset["lemmas"]
-    upos_tags = dataset["upos"]
+    forms: List[List[str]] = dataset["tokens"]
+    # upos_tags = dataset["upos"]
     processed_lemmas: List[List[str]] = []
-    for lemma_list, upos_list in zip(lemmas, upos_tags):
+    for form_list, lemma_list, in zip(forms, lemmas):
         tmp = []
-        for lemma, upos in zip(lemma_list, upos_list):
-            processed_lemma = lemma
-            # symbol not in both form and lemma
-            if upos != "PUNCT" and len(processed_lemma) > 1:
-                for symbol in symbols:
-                    processed_lemma = processed_lemma.replace(symbol, "")
-            tmp.append(processed_lemma)
+        for form, lemma in zip(form_list, lemma_list):
+            tmp.append(remove_symbols_helper(form, lemma, symbols))
         processed_lemmas.append(tmp)
+
+    # for lemma_list, upos_list in zip(lemmas, upos_tags):
+    #     tmp = []
+    #     for lemma, upos in zip(lemma_list, upos_list):
+    #         processed_lemma = lemma
+    #         # symbol not in both form and lemma
+    #         if upos != "PUNCT" and len(processed_lemma) > 1:
+    #             for symbol in symbols:
+    #                 processed_lemma = processed_lemma.replace(symbol, "")
+    #         tmp.append(processed_lemma)
+    #     processed_lemmas.append(tmp)
+
     return {"lemmas": processed_lemmas}
 
 
