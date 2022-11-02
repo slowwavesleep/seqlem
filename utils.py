@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import torch
 
 
@@ -26,3 +28,11 @@ def batch_accuracy(
                 correct += 1
     value = correct / total
     return value
+
+
+def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str, ...]) -> str:
+    processed_lemma = lemma
+    for symbol in symbols:
+        if symbol in lemma and symbol not in form and len(lemma) > 1:
+            processed_lemma = processed_lemma.replace(symbol, "")
+    return processed_lemma

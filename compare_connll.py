@@ -1,6 +1,6 @@
 from conllu import parse
 
-from trainer_run import remove_symbols_helper
+from utils import remove_symbols_helper
 
 gold_file_path = "et_edt-ud-dev.conllu"
 pred_file_path = "predicted.conllu"

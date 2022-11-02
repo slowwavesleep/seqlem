@@ -1,8 +1,7 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from itertools import chain
 
-from datasets import load_dataset, Dataset, load_metric
-from tqdm.auto import tqdm
+from datasets import load_dataset, Dataset
 from transformers import (
     AutoModelForTokenClassification,
     AutoTokenizer,
@@ -10,14 +9,13 @@ from transformers import (
     Trainer,
     TrainingArguments,
     AutoConfig,
-    EarlyStoppingCallback,
-    pipeline
+    EarlyStoppingCallback
 )
-import torch
 import numpy as np
 
 from dataset import generate_rules
 from lemma_rules import apply_lemma_rule
+from utils import remove_symbols_helper
 
 
 def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
@@ -28,14 +26,6 @@ def add_rule_labels(dataset: Dataset, rule_map: Dict[str, int]):
             list(map(lambda rule: rule_map.get(rule, rule_map["unk"]), sent))
         )
     return {"rule_labels": rule_labels}
-
-
-def remove_symbols_helper(form: str, lemma: str, symbols: Tuple[str, ...]) -> str:
-    processed_lemma = lemma
-    for symbol in symbols:
-        if symbol in lemma and symbol not in form and len(lemma) > 1:
-            processed_lemma = processed_lemma.replace(symbol, "")
-    return processed_lemma
 
 
 def remove_symbols(dataset: Dataset, *, symbols=("_", "=")):
