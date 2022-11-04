@@ -1,3 +1,5 @@
+from collections import Counter
+
 from conllu import parse
 
 from utils import remove_symbols_helper
@@ -17,6 +19,8 @@ with open(pred_file_path) as file:
 total = 0
 correct = 0
 
+errors = []
+
 for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
     for pred_token, gold_token in zip(pred_token_list, gold_token_list):
         true_lemma = gold_token["lemma"]
@@ -29,18 +33,21 @@ for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
             if pred_token["lemma"].lower() == true_lemma.lower():
                 correct += 1
             else:
-                print(
-                    f'original form: {pred_token["form"]}, predicted lemma: {pred_token["lemma"].lower()}, '
-                    f'true lemma: {true_lemma.lower()} '
-                )
+                errors.append((pred_token["form"], pred_token["lemma"].lower(), true_lemma.lower()))
+                # print(
+                #     f'original form: {pred_token["form"]}, predicted lemma: {pred_token["lemma"].lower()}, '
+                #     f'true lemma: {true_lemma.lower()} '
+                # )
         else:
             if pred_token["lemma"] == true_lemma:
                 correct += 1
             else:
-                print(
-                    f'original form: {pred_token["form"]}, predicted lemma: {pred_token["lemma"]}, '
-                    f'true lemma: {true_lemma}'
-                )
+                errors.append((pred_token["form"], pred_token["lemma"], true_lemma))
+                # print(
+                #     f'original form: {pred_token["form"]}, predicted lemma: {pred_token["lemma"]}, '
+                #     f'true lemma: {true_lemma}'
+                # )
         total += 1
 
+print(Counter(errors).most_common())
 print(correct / total)
