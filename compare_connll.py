@@ -49,5 +49,11 @@ for pred_token_list, gold_token_list in zip(pred_conll, gold_conll):
                 # )
         total += 1
 
-print(Counter(errors).most_common())
+for el in Counter(errors).most_common():
+    strings, count = el
+    form, predicted, actual = strings
+    print(
+        f'original form: {form}, predicted lemma: {predicted}, '
+        f'true lemma: {actual}, count: {count}'
+    )
 print(correct / total)
