@@ -1,6 +1,7 @@
 from typing import List, Dict
 from itertools import chain
 
+import datasets
 from datasets import load_dataset, Dataset
 from transformers import (
     AutoModelForTokenClassification,
@@ -116,7 +117,7 @@ def compute_metrics(p):
 
 
 MODEL_NAME = "tartuNLP/EstBERT"
-DATASET_NAME = "et_edt"
+DATASET_NAME = "et_ewt" # "et_edt"
 ALLOW_COPY = True
 MAX_LENGTH = 256
 BATCH_SIZE = 96
@@ -136,7 +137,11 @@ data_collator = DataCollatorForTokenClassification(
     return_tensors="pt",
 )
 
-data = load_dataset("universal_dependencies", DATASET_NAME)
+# data = load_dataset("universal_dependencies", DATASET_NAME, download_mode="force_redownload")
+
+# data = load_dataset("json", data_files={"train": "train.json", "dev": "dev.json",  "test": "test.json"}, features=features)
+
+data = datasets.load_from_disk("./data")
 if REMOVE_SYMBOLS:
     data = data.map(remove_symbols, batched=True)
 if CASELESS_TRAIN:
